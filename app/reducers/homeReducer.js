@@ -1,6 +1,6 @@
 import {
     SITTING_CHOSEN,
-} from '../actions/actions';
+} from '../constants/actionTypes';
 
 const INITIAL_STATE = {
         chosenSittingName: "Please choose sitting",
@@ -8,11 +8,10 @@ const INITIAL_STATE = {
         isSittingSelected: false
     };
 
-export default function(state = INITIAL_STATE, action) {
+export default function home(state = INITIAL_STATE, action) {
     switch (action.type) {
         case SITTING_CHOSEN:
             return {
-                ...state,
                 chosenSittingName: action.sitting.name,
                 chosenSittingDescription: action.sitting.description,
                 isSittingSelected: true

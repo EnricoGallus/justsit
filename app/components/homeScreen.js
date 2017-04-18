@@ -121,6 +121,7 @@ function mapStateToProps(state) {
     return {
         name: state.homeReducer.chosenSittingName,
         description: state.homeReducer.chosenSittingDescription,
+        isSittingSelected: state.homeReducer.isSittingSelected,
     };
 }
 

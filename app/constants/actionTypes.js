@@ -2,3 +2,5 @@ export const SITTING_CHOSEN = "SITTING_CHOSEN";
 export const EDIT_SITTING = "EDIT_SITTING";
 export const CREATE_SITTING = "CREATE_SITTING";
 export const SAVE_SITTING_CHANGES = "SAVE_SITTING_CHANGES";
+export const EDIT_STEP = "EDIT_STEP";
+export const CREATE_STEP = "CREATE_STEP";

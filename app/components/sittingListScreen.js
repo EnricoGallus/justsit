@@ -17,7 +17,6 @@ class SittingList extends Component {
 
     constructor(props) {
         super(props);
-        this._selectSitting = this._selectSitting.bind(this);
         this._editSitting = this._editSitting.bind(this);
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
@@ -31,23 +30,14 @@ class SittingList extends Component {
 
     onNavigatorEvent(event) {
         if (event.id === 'create') {
-            this._editSitting({});
+            this._editSitting();
         }
     }
 
     componentWillMount() {
-        this._populateListView();
-    }
-
-    _populateListView() {
         const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
         const dataSource = ds.cloneWithRows(this.props.sittings);
         this.setState({ dataSource });
-    }
-
-    _selectSitting(sitting) {
-        this.props.sittingChosen(sitting);
-        this.props.navigator.dismissModal();
     }
 
     _editSitting(sitting) {
@@ -88,7 +78,6 @@ const styles = StyleSheet.create({
 function mapStateToProps(state) {
     return {
         sittings: state.sittingReducer.sittings,
-        selectedId: state.sittingReducer.selectedId,
     };
 }
 

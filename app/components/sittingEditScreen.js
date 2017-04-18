@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import {
     ListView,
+    StyleSheet,
     View,
     ScrollView
 } from 'react-native';
@@ -28,7 +29,7 @@ class EditSitting extends Component {
 
     constructor(props) {
         super(props);
-        this._addStep = this._addStep.bind(this);
+        this._editStep = this._editStep.bind(this);
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
 
@@ -36,21 +37,21 @@ class EditSitting extends Component {
         if (event.id === 'cancel') {
             this.props.navigator.dismissModal();
         } else if (event.id == 'save') {
-            this.props.saveChanges(this.state.formData, this.sittingToEdit.id);
+            this.props.saveChanges(this.state.formData, this.props.currentSitting.id);
             this.props.navigator.pop();
         }
     }
 
     componentWillMount() {
-        this.sittingToEdit = this.props.sittings.find(x => x.id === this.props.selectedId);
         const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
-        const dataSource = ds.cloneWithRows(this.sittingToEdit ? this.sittingToEdit.steps : {});
+        const dataSource = ds.cloneWithRows(this.props.currentSitting.steps);
         this.setState({ dataSource });
     }
 
-    _addStep() {
-        this.props.navigator.showModal({
-            title: "Add Step",
+    _editStep(step) {
+        step ? this.props.editStep(step.id) : this.props.createStep();
+        this.props.navigator.push({
+            title: "Edit Step",
             screen: "justsit.EditStep",
         });
     }
@@ -90,32 +91,38 @@ class EditSitting extends Component {
                         ref='name'
                         label='Name'
                         placeholder='Name'
-                        value={this.sittingToEdit.name} />
+                        value={this.props.currentSitting.name} />
                     <InputField
                         ref='description'
                         label='Description'
                         placeholder='Description'
-                        value={this.sittingToEdit.description} />
+                        value={this.props.currentSitting.description} />
 
                     <ListView
                         enableEmptySections
                         dataSource={this.state.dataSource}
                         renderRow={rowData =>
                             <SittingStepRow
-                                info={rowData}
-                                edit={this._editSitting} />}
+                                step={rowData}
+                                edit={this._editStep} />}
                         renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator} />}
-                        renderFooter={() => <Footer command={this._addStep} /> } />
+                        renderFooter={() => <Footer command={this._editStep} /> } />
                 </Form>
             </ScrollView>
         );
     }
 }
 
+const styles = StyleSheet.create({
+    separator: {
+        height: StyleSheet.hairlineWidth,
+        backgroundColor: '#8E8E8E'
+    },
+});
+
 function mapStateToProps(state) {
     return {
-        sittings: state.sittingReducer.sittings,
-        selectedId: state.sittingReducer.selectedId
+        currentSitting: state.sittingReducer.currentSitting,
     };
 }
 

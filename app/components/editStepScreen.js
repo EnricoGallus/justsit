@@ -13,7 +13,7 @@ import {
 
 class EditStep extends Component {
     static navigatorButtons = {
-        leftButtons: [
+        rightButtons: [
             {
                 title: 'cancel',
                 id: 'cancel',
