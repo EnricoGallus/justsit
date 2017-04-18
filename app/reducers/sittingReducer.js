@@ -4,11 +4,11 @@ import {
 
 
 const INITIAL_STATE = {
-    selectedSitting: { id: 0, name: "Please choose sitting" },
+    selectedSitting: { id: 0, name: "Please choose sitting", isStep: false },
     sittings: [
-        { id: 1, name: "JustSit" },
-        { id: 2, name: "Zazen" },
-        { id: 3, name: "Zazen + Kishin" }
+        { id: 1, name: "JustSit", isStep: true },
+        { id: 2, name: "Zazen", isStep: true },
+        { id: 3, name: "Zazen + Kinhin", isStep: true }
     ],
 };
 

@@ -9,10 +9,43 @@ import {
 import { connect } from 'react-redux'
 
 class Home extends Component {
+    static navigatorButtons = {
+        rightButtons: [
+            {
+                title: 'edit',
+                id: 'edit',
+                passProps: {
+                    isEdit: true
+                }
+            }
+        ]
+    };
+
+    constructor(props) {
+        super(props);
+        // if you want to listen on navigator events, set this up
+        this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+    }
+
+    onNavigatorEvent(event) {
+        if (event.id === 'edit') {
+            this.editSitting();
+        }
+    }
+
+    editSitting() {
+        this.props.navigator.push({
+            title: "Edit Sitting",
+            screen: "justsit.Sitting",
+            passProps: { isEdit: true }
+        });
+    }
+
     selectSitting() {
         this.props.navigator.push({
             title: "Choose Sitting",
-            screen: "justsit.ChooseSitting"
+            screen: "justsit.Sitting",
+            passProps: { isEdit: false }
         });
     }
 
@@ -34,7 +67,7 @@ class Home extends Component {
                     <Text style={styles.sittingButton}>{this.props.selectedSitting.name}</Text>
                 </TouchableOpacity>
                 <View>
-                    <TouchableOpacity onPress={ this.goToZendo.bind(this) }>
+                    <TouchableOpacity disabled={!this.props.selectedSitting.isStep} onPress={ this.goToZendo.bind(this) }>
                         <Text style={styles.zendoButton}>Go to Zendo</Text>
                     </TouchableOpacity>
                 </View>
@@ -71,7 +104,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 25,
         color: 'white',
-        backgroundColor: 'lightblue',
+        backgroundColor: '#2583ba',
     }
 });
 

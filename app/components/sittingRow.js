@@ -10,10 +10,10 @@ import Icon from 'react-native-vector-icons/Ionicons';
 class SittingRow extends Component {
 
     render() {
-        const { info, select } = this.props;
+        const { info, select, edit } = this.props;
         return (
             <TouchableHighlight
-                onPress={select.bind(this, info)}
+                onPress={this.props.isEdit ? edit.bind(this, info) : select.bind(this, info)}
                 style={styles.button}>
                 <View style={styles.content}>
                     <Text style={styles.periodText}>{info.name}</Text>
