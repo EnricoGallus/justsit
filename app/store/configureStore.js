@@ -10,7 +10,7 @@ export default function configureStore(initialState = undefined) {
     const logger = createLogger();
     const enhancer = compose(
         applyMiddleware(thunk, promise, logger),
-        //autoRehydrate()
+        autoRehydrate()
     );
 
     return createStore(rootReducer, initialState, enhancer);

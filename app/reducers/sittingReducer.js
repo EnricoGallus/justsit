@@ -2,7 +2,7 @@ import {
     EDIT_SITTING,
     CREATE_SITTING,
     SAVE_SITTING_CHANGES
-} from '../actions/actions';
+} from '../constants/actionTypes';
 
 
 const INITIAL_STATE = {
@@ -14,7 +14,7 @@ const INITIAL_STATE = {
     ]
 };
 
-export default function(state = INITIAL_STATE, action) {
+export default function sittings(state = INITIAL_STATE, action) {
     switch (action.type) {
         case EDIT_SITTING:
             return {

@@ -1,35 +1,22 @@
-const SITTING_CHOSEN = "SITTING_CHOSEN";
-const EDIT_SITTING = "EDIT_SITTING";
-const CREATE_SITTING = "CREATE_SITTING";
-const SAVE_SITTING_CHANGES = "SAVE_SITTING_CHANGES";
+import * as types from '../constants/actionTypes'
 
-export { SITTING_CHOSEN, EDIT_SITTING, CREATE_SITTING, SAVE_SITTING_CHANGES }
+export const sittingChosen = sitting => ({
+    type: types.SITTING_CHOSEN,
+    sitting: sitting,
+});
 
-export function sittingChosen(sitting) {
-    return {
-        type: SITTING_CHOSEN,
-        sitting: sitting,
-    };
-}
+export const editSitting = sittingId => ({
+    type: types.EDIT_SITTING,
+    id: sittingId,
+});
 
-export function editSitting(sitting) {
-    return {
-        type: EDIT_SITTING,
-        id: sitting,
-    };
-}
+export const createSitting = () =>  ({
+    type: types.CREATE_SITTING,
+    id: undefined,
+});
 
-export function createSitting() {
-    return {
-        type: CREATE_SITTING,
-        id: undefined,
-    };
-}
-
-export function saveChanges(formData, sittingId) {
-    return {
-        type: SAVE_SITTING_CHANGES,
-        id: sittingId,
-        formData: formData
-    };
-}
+export const saveChanges = (formData, sittingId) => ({
+    type: types.SAVE_SITTING_CHANGES,
+    id: sittingId,
+    formData: formData
+});
