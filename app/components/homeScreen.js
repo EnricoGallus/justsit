@@ -35,7 +35,7 @@ class Home extends Component {
 
     editSitting() {
         this.props.navigator.push({
-            title: "Edit Sitting",
+            title: "Sitting",
             screen: "justsit.Sitting",
             passProps: { isEdit: true }
         });

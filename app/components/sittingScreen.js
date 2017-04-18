@@ -1,15 +1,31 @@
 import React, { Component } from 'react'
-import { StyleSheet, Text, View, ListView } from 'react-native'
+import { StyleSheet, View, ListView } from 'react-native'
 import { connect } from 'react-redux'
 
 import { SittingRow } from './sittingRow'
 import * as sittingActions from '../actions/sittingActions'
 
-class ChooseSitting extends Component {
+class Sitting extends Component {
+    static navigatorButtons = {
+        rightButtons: [
+            {
+                title: 'create',
+                id: 'create',
+            }
+        ]
+    };
+
     constructor(props) {
         super(props);
         this._selectSitting = this._selectSitting.bind(this);
         this._editSitting = this._editSitting.bind(this);
+        this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+    }
+
+    onNavigatorEvent(event) {
+        if (event.id === 'create') {
+            this._createSitting();
+        }
     }
 
     componentWillMount() {
@@ -18,15 +34,23 @@ class ChooseSitting extends Component {
         this.setState({ dataSource });
     }
 
+    _createSitting() {
+        this.props.navigator.push({
+            title: "Create Sitting",
+            screen: "justsit.CreateSitting"
+        });
+    }
+
     _selectSitting(sitting) {
         this.props.sittingChosen(sitting)
         this.props.navigator.pop();
     }
 
-    _editSitting() {
+    _editSitting(sitting) {
         this.props.navigator.push({
             title: "Edit Sitting",
             screen: "justsit.EditSitting",
+            passProps: { sitting: sitting }
         });
     }
 
@@ -64,4 +88,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps, {...sittingActions})(ChooseSitting)
+export default connect(mapStateToProps, {...sittingActions})(Sitting)

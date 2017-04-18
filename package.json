@@ -9,6 +9,7 @@
   "dependencies": {
     "react": "16.0.0-alpha.6",
     "react-native": "0.43.3",
+    "react-native-form-generator": "^0.9.9",
     "react-native-navigation": "^2.0.0-experimental.301",
     "react-native-vector-icons": "^4.0.1",
     "react-redux": "^5.0.4",
