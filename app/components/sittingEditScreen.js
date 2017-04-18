@@ -5,33 +5,53 @@ import {
     View,
     ScrollView
 } from 'react-native';
-import { Form,
-    Separator,InputField,
-    SwitchField, PickerField,DatePickerField,TimePickerField
+import {
+    Form,
+    Separator,
+    InputField,
 } from 'react-native-form-generator';
+
+import * as actions from '../actions/actions'
+
 import { SittingStepRow } from './sittingStepRow'
 import { Footer} from './listViewFooter'
 
 class EditSitting extends Component {
-    constructor(props){
+    static navigatorButtons = {
+        rightButtons: [
+            {
+                title: 'save',
+                id: 'save',
+            }
+        ]
+    };
+
+    constructor(props) {
         super(props);
         this._addStep = this._addStep.bind(this);
-        this.state = {
-            formData:{ }
+        this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+    }
+
+    onNavigatorEvent(event) {
+        if (event.id === 'cancel') {
+            this.props.navigator.dismissModal();
+        } else if (event.id == 'save') {
+            this.props.saveChanges(this.state.formData, this.sittingToEdit.id);
+            this.props.navigator.pop();
         }
     }
 
     componentWillMount() {
+        this.sittingToEdit = this.props.sittings.find(x => x.id === this.props.selectedId);
         const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
-        const dataSource = ds.cloneWithRows(this.props.sitting.steps);
+        const dataSource = ds.cloneWithRows(this.sittingToEdit ? this.sittingToEdit.steps : {});
         this.setState({ dataSource });
     }
 
-    _addStep(sitting) {
-        this.props.navigator.push({
+    _addStep() {
+        this.props.navigator.showModal({
             title: "Add Step",
             screen: "justsit.EditStep",
-            passProps: { sitting: sitting }
         });
     }
 
@@ -52,11 +72,12 @@ class EditSitting extends Component {
         this.setState({formData:formData})
         this.props.onFormChange && this.props.onFormChange(formData);
     }
+
     handleFormFocus(e, component){
+
     }
 
     render(){
-        const { sitting } = this.props;
         return (
             <ScrollView keyboardShouldPersistTaps="always" style={{paddingLeft:10,paddingRight:10, height:200}}>
                 <Form
@@ -66,15 +87,15 @@ class EditSitting extends Component {
                     label="Edit Sitting">
                     <Separator />
                     <InputField
-                        ref='sitting_name'
+                        ref='name'
                         label='Name'
                         placeholder='Name'
-                        value={sitting.name} />
+                        value={this.sittingToEdit.name} />
                     <InputField
-                        ref='sitting_description'
+                        ref='description'
                         label='Description'
                         placeholder='Description'
-                        value={sitting.description} />
+                        value={this.sittingToEdit.description} />
 
                     <ListView
                         enableEmptySections
@@ -84,27 +105,7 @@ class EditSitting extends Component {
                                 info={rowData}
                                 edit={this._editSitting} />}
                         renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator} />}
-                        renderFooter={() => <Footer element={this.props.sitting} command={this._addStep} /> } />
-
-                    <SwitchField label='I accept Terms & Conditions'
-                                 ref="has_accepted_conditions"
-                                 helpText='Please read carefully the terms & conditions'/>
-                    <PickerField ref='gender'
-                                 label='Gender'
-                                 options={{
-                                     "": '',
-                                     male: 'Male',
-                                     female: 'Female'
-                                 }}/>
-                    <DatePickerField ref='birthday'
-                                     minimumDate={new Date('1/1/1900')}
-                                     maximumDate={new Date()}
-                                     placeholder='Birthday'/>
-                    <TimePickerField ref='alarm_time'
-                                     placeholder='Set Alarm'/>
-                    <DatePickerField ref='meeting'
-                                     minimumDate={new Date('1/1/1900')}
-                                     maximumDate={new Date()} mode="datetime" placeholder='Meeting'/>
+                        renderFooter={() => <Footer command={this._addStep} /> } />
                 </Form>
             </ScrollView>
         );
@@ -113,8 +114,9 @@ class EditSitting extends Component {
 
 function mapStateToProps(state) {
     return {
-
+        sittings: state.sittingReducer.sittings,
+        selectedId: state.sittingReducer.selectedId
     };
 }
 
-export default connect(mapStateToProps)(EditSitting)
+export default connect(mapStateToProps, {...actions})(EditSitting)

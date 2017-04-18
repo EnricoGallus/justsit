@@ -1,24 +1,41 @@
 import {
-    SITTING_CHOSEN,
-} from '../actions/sittingActions';
+    EDIT_SITTING,
+    CREATE_SITTING,
+    SAVE_SITTING_CHANGES
+} from '../actions/actions';
 
 
 const INITIAL_STATE = {
-    selectedSitting: { id: 0, name: "Please choose sitting", isStep: false },
+    selectedId: undefined,
     sittings: [
-        { id: 1, name: "JustSit", isStep: true, steps: [] },
-        { id: 2, name: "Zazen", isStep: true, steps: [] },
-        { id: 3, name: "Zazen + Kinhin", isStep: true, steps: [] }
-    ],
+        { id: 1, name: "JustSit", steps: [] },
+        { id: 2, name: "Zazen", steps: [] },
+        { id: 3, name: "Zazen + Kinhin", steps: [] },
+    ]
 };
 
 export default function(state = INITIAL_STATE, action) {
     switch (action.type) {
-        case "SITTING_CHOSEN":
+        case EDIT_SITTING:
             return {
                 ...state,
-                selectedSitting: action.sitting
+                selectedId: action.id
             };
+        case CREATE_SITTING:
+            return {
+                ...state,
+            };
+        case SAVE_SITTING_CHANGES:
+            return {
+                sittings: Object.assign([], state.sittings.map((sitting) => {
+                    if (sitting.id === action.id) {
+                        return Object.assign({}, sitting, {
+                            name: action.formData.name || sitting.name,
+                            description: action.formData.description || sitting.description
+                        })
+                    }
+                    return sitting
+                }))};
         default:
             return state;
     }

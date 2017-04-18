@@ -3,14 +3,14 @@ import { StyleSheet, View, ListView } from 'react-native'
 import { connect } from 'react-redux'
 
 import { SittingRow } from './sittingRow'
-import * as sittingActions from '../actions/sittingActions'
+import * as actions from '../actions/actions'
 
-class Sitting extends Component {
+class SittingSelect extends Component {
     static navigatorButtons = {
-        rightButtons: [
+        leftButtons: [
             {
-                title: 'create',
-                id: 'create',
+                title: 'cancel',
+                id: 'cancel',
             }
         ]
     };
@@ -18,13 +18,12 @@ class Sitting extends Component {
     constructor(props) {
         super(props);
         this._selectSitting = this._selectSitting.bind(this);
-        this._editSitting = this._editSitting.bind(this);
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
 
     onNavigatorEvent(event) {
-        if (event.id === 'create') {
-            this._createSitting();
+        if (event.id === 'cancel') {
+            this.props.navigator.dismissModal();
         }
     }
 
@@ -34,24 +33,9 @@ class Sitting extends Component {
         this.setState({ dataSource });
     }
 
-    _createSitting() {
-        this.props.navigator.push({
-            title: "Create Sitting",
-            screen: "justsit.CreateSitting"
-        });
-    }
-
     _selectSitting(sitting) {
-        this.props.sittingChosen(sitting)
-        this.props.navigator.pop();
-    }
-
-    _editSitting(sitting) {
-        this.props.navigator.push({
-            title: "Edit Sitting",
-            screen: "justsit.EditSitting",
-            passProps: { sitting: sitting }
-        });
+        this.props.sittingChosen(sitting);
+        this.props.navigator.dismissModal();
     }
 
     render() {
@@ -62,9 +46,8 @@ class Sitting extends Component {
                     dataSource={this.state.dataSource}
                     renderRow={rowData =>
                         <SittingRow
+                            isEdit={false}
                             info={rowData}
-                            isEdit={this.props.isEdit}
-                            edit={this._editSitting}
                             select={this._selectSitting} />}
                     renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator} />} />
             </View>
@@ -88,4 +71,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps, {...sittingActions})(Sitting)
+export default connect(mapStateToProps, {...actions})(SittingSelect)

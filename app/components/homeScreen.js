@@ -35,17 +35,15 @@ class Home extends Component {
 
     editSitting() {
         this.props.navigator.push({
-            title: "Sitting",
-            screen: "justsit.Sitting",
-            passProps: { isEdit: true }
+            title: "Sitting List",
+            screen: "justsit.SittingList",
         });
     }
 
     selectSitting() {
-        this.props.navigator.push({
+        this.props.navigator.showModal({
             title: "Choose Sitting",
-            screen: "justsit.Sitting",
-            passProps: { isEdit: false }
+            screen: "justsit.SittingSelect",
         });
     }
 
@@ -63,11 +61,15 @@ class Home extends Component {
                 <Image resizeMode="contain" source={require('../img/enso.jpg')} />
             </View>
             <View style={styles.buttonContainer}>
-                <TouchableOpacity onPress={ this.selectSitting.bind(this) }>
-                    <Text style={styles.sittingButton}>{this.props.selectedSitting.name}</Text>
+                <TouchableOpacity onPress={this.selectSitting.bind(this) }>
+                    <View>
+                        <Text style={styles.sittingName}>{this.props.name}</Text>
+                        <Text style={styles.sittingDescription}>{this.props.description}</Text>
+                    </View>
+
                 </TouchableOpacity>
                 <View>
-                    <TouchableOpacity disabled={!this.props.selectedSitting.isStep} onPress={ this.goToZendo.bind(this) }>
+                    <TouchableOpacity disabled={!this.props.isSittingSelected} onPress={this.goToZendo.bind(this)}>
                         <Text style={styles.zendoButton}>Go to Zendo</Text>
                     </TouchableOpacity>
                 </View>
@@ -92,7 +94,14 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         padding:50,
     },
-    sittingButton: {
+    sittingName: {
+        marginTop: 20,
+        marginBottom: 40,
+        textAlign: 'center',
+        fontSize: 25,
+        color: 'lightgrey',
+    },
+    sittingDescription: {
         marginTop: 20,
         marginBottom: 40,
         textAlign: 'center',
@@ -110,7 +119,8 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
     return {
-        selectedSitting: state.sittingReducer.selectedSitting,
+        name: state.homeReducer.chosenSittingName,
+        description: state.homeReducer.chosenSittingDescription,
     };
 }
 
