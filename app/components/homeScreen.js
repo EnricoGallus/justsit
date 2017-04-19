@@ -14,16 +14,12 @@ class Home extends Component {
             {
                 title: 'edit',
                 id: 'edit',
-                passProps: {
-                    isEdit: true
-                }
             }
         ]
     };
 
     constructor(props) {
         super(props);
-        // if you want to listen on navigator events, set this up
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
 
@@ -62,11 +58,10 @@ class Home extends Component {
             </View>
             <View style={styles.buttonContainer}>
                 <TouchableOpacity onPress={this.selectSitting.bind(this) }>
-                    <View>
+                    <View style={styles.sittingSelection}>
                         <Text style={styles.sittingName}>{this.props.name}</Text>
                         <Text style={styles.sittingDescription}>{this.props.description}</Text>
                     </View>
-
                 </TouchableOpacity>
                 <View>
                     <TouchableOpacity disabled={!this.props.isSittingSelected} onPress={this.goToZendo.bind(this)}>
@@ -75,7 +70,6 @@ class Home extends Component {
                 </View>
             </View>
         </View>
-
         )
     }
 }
@@ -95,20 +89,19 @@ const styles = StyleSheet.create({
         padding:50,
     },
     sittingName: {
-        marginTop: 20,
-        marginBottom: 40,
-        textAlign: 'center',
+        paddingLeft: 20,
+        textAlign: 'left',
         fontSize: 25,
         color: 'lightgrey',
     },
     sittingDescription: {
-        marginTop: 20,
-        marginBottom: 40,
-        textAlign: 'center',
-        fontSize: 25,
+        paddingLeft: 20,
+        textAlign: 'left',
+        fontSize: 10,
         color: 'lightgrey',
     },
     zendoButton: {
+        marginTop: 50,
         padding: 20,
         textAlign: 'center',
         fontSize: 25,
