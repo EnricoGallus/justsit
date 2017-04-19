@@ -19,9 +19,15 @@ import { Footer} from './listViewFooter'
 
 class EditSitting extends Component {
     static navigatorButtons = {
+        leftButtons: [
+            {
+                title: 'cancel',
+                id: 'cancel',
+            }
+        ],
         rightButtons: [
             {
-                title: 'save',
+                title: 'done',
                 id: 'save',
             }
         ]
@@ -30,60 +36,54 @@ class EditSitting extends Component {
     constructor(props) {
         super(props);
         this._editStep = this._editStep.bind(this);
+        this._createStep = this._createStep.bind(this);
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
 
     onNavigatorEvent(event) {
         if (event.id === 'cancel') {
-            this.props.navigator.dismissModal();
-        } else if (event.id == 'save') {
+            this.props.navigator.pop();
+        } else if (event.id === 'save') {
             this.props.saveChanges(this.state.formData, this.props.currentSitting.id);
             this.props.navigator.pop();
         }
     }
 
     componentWillMount() {
-        const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
+        const ds = new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2 });
         const dataSource = ds.cloneWithRows(this.props.currentSitting.steps);
         this.setState({ dataSource });
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.currentSitting.steps !== this.props.currentSitting.steps) {
+            this.setState({dataSource: this.state.dataSource.cloneWithRows(nextProps.currentSitting.steps)
+            })
+        }
+    }
+
+    _createStep() {
+        this._editStep();
     }
 
     _editStep(step) {
         step ? this.props.editStep(step.id) : this.props.createStep();
         this.props.navigator.push({
             title: "Edit Step",
-            screen: "justsit.EditStep",
+            screen: "justsit.StepEdit",
         });
     }
 
     handleFormChange(formData){
-        /*
-         formData will contain all the values of the form,
-         in this example.
-
-         formData = {
-         first_name:"",
-         last_name:"",
-         gender: '',
-         birthday: Date,
-         has_accepted_conditions: bool
-         }
-         */
-
-        this.setState({formData:formData})
+        this.setState({formData:formData});
         this.props.onFormChange && this.props.onFormChange(formData);
-    }
-
-    handleFormFocus(e, component){
-
     }
 
     render(){
         return (
-            <ScrollView keyboardShouldPersistTaps="always" style={{paddingLeft:10,paddingRight:10, height:200}}>
+            <ScrollView keyboardShouldPersistTaps="always" style={styles.scrollview}>
                 <Form
                     ref='editSittingForm'
-                    onFocus={this.handleFormFocus.bind(this)}
                     onChange={this.handleFormChange.bind(this)}
                     label="Edit Sitting">
                     <Separator />
@@ -97,7 +97,6 @@ class EditSitting extends Component {
                         label='Description'
                         placeholder='Description'
                         value={this.props.currentSitting.description} />
-
                     <ListView
                         enableEmptySections
                         dataSource={this.state.dataSource}
@@ -106,7 +105,7 @@ class EditSitting extends Component {
                                 step={rowData}
                                 edit={this._editStep} />}
                         renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator} />}
-                        renderFooter={() => <Footer command={this._editStep} /> } />
+                        renderFooter={() => <Footer command={this._createStep} /> } />
                 </Form>
             </ScrollView>
         );
@@ -114,6 +113,11 @@ class EditSitting extends Component {
 }
 
 const styles = StyleSheet.create({
+    scrollview: {
+        paddingLeft:10,
+        paddingRight:10,
+        height:200
+    },
     separator: {
         height: StyleSheet.hairlineWidth,
         backgroundColor: '#8E8E8E'

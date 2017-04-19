@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 const Footer = (props) => (
     <View style={styles.container}>
         <TouchableOpacity style={styles.button} onPress={props.command.bind(this)}>
-            <Text style={styles.text}>Add</Text>
+            <Text style={styles.text}>Add Step</Text>
         </TouchableOpacity>
     </View>
 );

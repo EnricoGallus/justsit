@@ -8,15 +8,23 @@ import {
     Form,
     Separator,
     InputField,
-    TimePickerField
+    CountDownField
 } from 'react-native-form-generator';
+
+import * as actions from '../actions/actions'
 
 class EditStep extends Component {
     static navigatorButtons = {
-        rightButtons: [
+        leftButtons: [
             {
                 title: 'cancel',
                 id: 'cancel',
+            }
+        ],
+        rightButtons: [
+            {
+                title: 'done',
+                id: 'done',
             }
         ]
     };
@@ -30,49 +38,35 @@ class EditStep extends Component {
         if (event.id === 'cancel') {
             this.props.navigator.dismissModal();
         }
+        else if (event.id === 'done') {
+            this.props.saveStepChanges(this.state.formData, this.props.currentStep.id);
+            this.props.navigator.pop();
+        }
     }
 
     handleFormChange(formData){
-        /*
-         formData will contain all the values of the form,
-         in this example.
-
-         formData = {
-         first_name:"",
-         last_name:"",
-         gender: '',
-         birthday: Date,
-         has_accepted_conditions: bool
-         }
-         */
-
         this.setState({formData:formData})
         this.props.onFormChange && this.props.onFormChange(formData);
     }
 
-    handleFormFocus(e, component){
-
-    }
-
     render(){
-        const { step } = this.props;
+        const { currentStep } = this.props;
         return (
             <ScrollView keyboardShouldPersistTaps="always" style={{paddingLeft:10,paddingRight:10, height:200}}>
                 <Form
-                    ref='editSittingForm'
-                    onFocus={this.handleFormFocus.bind(this)}
+                    ref='editStepForm'
                     onChange={this.handleFormChange.bind(this)}
-                    label="Edit Sitting">
+                    label="Edit Step">
                     <Separator />
-                    <TimePickerField
+                    <CountDownField
                         ref='step_time'
                         placeholder='Steptime'
-                        value={step.time} />
+                        value={currentStep.time} />
                     <InputField
                         ref='step_name'
                         label='Name'
                         placeholder='Name'
-                        value={step.name} />
+                        value={currentStep.name} />
                 </Form>
             </ScrollView>
         );
@@ -81,9 +75,8 @@ class EditStep extends Component {
 
 function mapStateToProps(state) {
     return {
-        sittingForEdit: state.sittingReducer.sittingForEdit,
-        step: state.stepReducer.step
+        currentStep: state.sittingReducer.currentStep
     };
 }
 
-export default connect(mapStateToProps)(EditStep)
+export default connect(mapStateToProps, {...actions})(EditStep)

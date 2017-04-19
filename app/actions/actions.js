@@ -17,8 +17,13 @@ export const createSitting = () =>  ({
 
 export const saveChanges = (formData, sittingId) => ({
     type: types.SAVE_SITTING_CHANGES,
+    formData: formData,
     id: sittingId,
-    formData: formData
+});
+
+export const createStep = () =>  ({
+    type: types.CREATE_STEP,
+    id: undefined,
 });
 
 export const editStep = stepId => ({
@@ -26,7 +31,8 @@ export const editStep = stepId => ({
     id: stepId,
 });
 
-export const createStep = () =>  ({
-    type: types.CREATE_STEP,
-    id: undefined,
+export const saveStepChanges = (formData, stepId) =>  ({
+    type: types.SAVE_STEP_CHANGES,
+    formData: formData,
+    id: stepId,
 });
