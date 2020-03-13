@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 
 import { SittingRow } from './sittingRow'
 import * as sittingActions from '../actions/actions'
+import {Navigation} from "react-native-navigation";
 
 class SittingList extends Component {
     static navigatorButtons = {
@@ -18,7 +19,7 @@ class SittingList extends Component {
     constructor(props) {
         super(props);
         this._editSitting = this._editSitting.bind(this);
-        this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+        Navigation.events().bindComponent(this);
     }
 
     componentWillReceiveProps(nextProps) {

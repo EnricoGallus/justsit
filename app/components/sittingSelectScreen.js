@@ -1,55 +1,43 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, ListView } from 'react-native'
+import { StyleSheet, View, FlatList } from 'react-native'
 import { connect } from 'react-redux'
 
 import { SittingRow } from './sittingRow'
 import * as actions from '../actions/actions'
+import {Navigation} from "react-native-navigation";
 
 class SittingSelect extends Component {
-    static navigatorButtons = {
-        leftButtons: [
-            {
-                title: 'cancel',
-                id: 'cancel',
-            }
-        ]
-    };
 
     constructor(props) {
         super(props);
         this._selectSitting = this._selectSitting.bind(this);
-        this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+        Navigation.events().bindComponent(this);
     }
 
-    onNavigatorEvent(event) {
-        if (event.id === 'cancel') {
-            this.props.navigator.dismissModal();
+    navigationButtonPressed({ buttonId }) {
+        if (buttonId === 'cancelSitting') {
+            Navigation.dismissModal(this.props.componentId);
         }
-    }
-
-    componentWillMount() {
-        const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
-        const dataSource = ds.cloneWithRows(this.props.sittings);
-        this.setState({ dataSource });
     }
 
     _selectSitting(sitting) {
         this.props.sittingChosen(sitting);
-        this.props.navigator.dismissModal();
+        Navigation.dismissModal(this.props.componentId);
+    }
+
+    renderRow(sitting) {
+        return (
+            <SittingRow isEdit={false} info={sitting} select={this._selectSitting} />
+        )
     }
 
     render() {
         return (
             <View style={styles.container}>
-                <ListView
-                    enableEmptySections
-                    dataSource={this.state.dataSource}
-                    renderRow={rowData =>
-                        <SittingRow
-                            isEdit={false}
-                            info={rowData}
-                            select={this._selectSitting} />}
-                    renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator} />} />
+                <FlatList
+                    data={this.props.sittings}
+                    renderItem={({ item }) => this.renderRow(item)}
+                    keyExtractor={(item) => item.id.toString()}/>
             </View>
         )
     }

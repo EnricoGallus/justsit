@@ -12,6 +12,7 @@ import {
 } from 'react-native-form-generator';
 
 import * as actions from '../actions/actions'
+import {Navigation} from "react-native-navigation";
 
 class EditStep extends Component {
     static navigatorButtons = {
@@ -31,7 +32,7 @@ class EditStep extends Component {
 
     constructor(props) {
         super(props);
-        this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+        Navigation.events().bindComponent(this);
     }
 
     onNavigatorEvent(event) {

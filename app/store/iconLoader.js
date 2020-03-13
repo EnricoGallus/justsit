@@ -14,7 +14,7 @@ const icons = {
 
 const iconsMap = {};
 
-const iconsLoaded = new Promise((resolve, reject) => {
+const loadIcons = new Promise((resolve, reject) => {
     new Promise.all(
         Object.keys(icons).map(iconName =>
             // IconName--suffix--other-suffix is just the mapping name in iconsMap
@@ -32,4 +32,4 @@ const iconsLoaded = new Promise((resolve, reject) => {
     });
 });
 
-export { iconsLoaded, iconsMap }
+export { loadIcons, iconsMap }

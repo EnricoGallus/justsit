@@ -7,20 +7,29 @@ import {
     View
 } from 'react-native'
 import { connect } from 'react-redux'
+import {Navigation} from "react-native-navigation";
+import {selectSitting} from "../navigation/navigationController";
 
 class Home extends Component {
-    static navigatorButtons = {
-        rightButtons: [
-            {
-                title: 'edit',
-                id: 'edit',
-            }
-        ]
+    static options() {
+        return {
+            topBar: {
+                title: {
+                    text: 'home'
+                }
+            },
+            rightButtons: [
+                {
+                    title: 'edit',
+                    id: 'edit',
+                }
+            ]
+        }
     };
 
     constructor(props) {
         super(props);
-        this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+        Navigation.events().bindComponent(this);
     }
 
     onNavigatorEvent(event) {
@@ -33,13 +42,6 @@ class Home extends Component {
         this.props.navigator.push({
             title: "Sitting List",
             screen: "justsit.SittingList",
-        });
-    }
-
-    selectSitting() {
-        this.props.navigator.showModal({
-            title: "Choose Sitting",
-            screen: "justsit.SittingSelect",
         });
     }
 
@@ -57,7 +59,7 @@ class Home extends Component {
                 <Image resizeMode="contain" source={require('../img/enso.jpg')} />
             </View>
             <View style={styles.buttonContainer}>
-                <TouchableOpacity onPress={this.selectSitting.bind(this) }>
+                <TouchableOpacity onPress={() => selectSitting() }>
                     <View style={styles.sittingSelection}>
                         <Text style={styles.sittingName}>{this.props.name}</Text>
                         <Text style={styles.sittingDescription}>{this.props.description}</Text>

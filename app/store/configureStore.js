@@ -1,18 +1,20 @@
-import { createStore, applyMiddleware, compose } from 'redux'
+import AsyncStorage from '@react-native-community/async-storage';
+import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk'
-import promise from 'redux-promise'
-import { autoRehydrate } from 'redux-persist'
-import { createLogger } from 'redux-logger'
+import { createLogger } from 'redux-logger';
+import { persistStore, persistReducer } from 'redux-persist';
+import rootReducer from "../reducers/rootReducer";
 
-import rootReducer from '../reducers/rootReducer'
+// Middleware: Redux Persist Config
+const persistConfig = {
+    key: 'rootReducer',
+    storage: AsyncStorage,
+};
 
-export default function configureStore(initialState = undefined) {
-    const logger = createLogger();
-    const enhancer = compose(
-        applyMiddleware(thunk, promise, logger),
-        autoRehydrate()
-    );
+// Middleware: Redux Persist Persisted Reducer
+export default function configureStore(initialState) {
+    const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-    return createStore(rootReducer, initialState, enhancer);
+    return createStore(persistedReducer, initialState, applyMiddleware(thunk, createLogger()));
 }
 

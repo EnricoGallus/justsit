@@ -16,6 +16,7 @@ import * as actions from '../actions/actions'
 
 import { SittingStepRow } from './sittingStepRow'
 import { Footer} from './listViewFooter'
+import {Navigation} from "react-native-navigation";
 
 class EditSitting extends Component {
     static navigatorButtons = {
@@ -37,7 +38,7 @@ class EditSitting extends Component {
         super(props);
         this._editStep = this._editStep.bind(this);
         this._createStep = this._createStep.bind(this);
-        this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+        Navigation.events().bindComponent(this);
     }
 
     onNavigatorEvent(event) {
